@@ -4,7 +4,7 @@
 
 This is a 3D animation that I programmed in C++ with OpenGL. It uses glad, irKlang, stb, and glfw libraries along with a little math to develop the coordinates for some visually interesting shapes. 
 
-![New_video_AdobeExpress](https://github.com/sheraadams/OpenGL-Fractal-Animation/assets/110789514/04d3e42c-2101-4901-847f-75de8d4c4011)
+![New_video_AdobeExpress](https://github.com/sheraadams/OpenGL-Fractal-Animation/assets/110789514/153d2d1f-b646-4d1a-8cf9-90fa6c3c349e)
 
 <div style="text-align: center;">
   <p><strong>Watch the video <a href="https://youtu.be/IUwRo-ozt9M" target="_blank">here</a>.</strong></p>
