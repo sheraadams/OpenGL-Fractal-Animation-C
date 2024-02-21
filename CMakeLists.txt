@@ -76,7 +76,7 @@ else()
     set(LIBS )
 endif(WIN32)
 
-set(CHAPTERS
+set(PROJECTS
         sa
         )
 
@@ -99,23 +99,23 @@ macro(makeLink src dest target)
     add_custom_command(TARGET ${target} POST_BUILD COMMAND ${CMAKE_COMMAND} -E create_symlink ${src} ${dest}  DEPENDS  ${dest} COMMENT "mklink ${src} -> ${dest}")
 endmacro()
 
-function(create_project_from_sources chapter demo)
+function(create_project_from_sources project version)
     file(GLOB SOURCE
-            "src/${chapter}/${demo}/*.h"
-            "src/${chapter}/${demo}/*.cpp"
-            "src/${chapter}/${demo}/*.vs"
-            "src/${chapter}/${demo}/*.fs"
-            "src/${chapter}/${demo}/*.tcs"
-            "src/${chapter}/${demo}/*.tes"
-            "src/${chapter}/${demo}/*.gs"
-            "src/${chapter}/${demo}/*.cs"
+            "src/${project}/${version}/*.h"
+            "src/${project}/${version}/*.cpp"
+            "src/${project}/${version}/*.vs"
+            "src/${project}/${version}/*.fs"
+            "src/${project}/${version}/*.tcs"
+            "src/${project}/${version}/*.tes"
+            "src/${project}/${version}/*.gs"
+            "src/${project}/${version}/*.cs"
             )
-    if (demo STREQUAL "")
+    if (version STREQUAL "")
         SET(replaced "")
-        string(REPLACE "/" "_" replaced ${chapter})
+        string(REPLACE "/" "_" replaced ${project})
         set(NAME ${replaced})
     else()
-        set(NAME "${chapter}__${demo}")
+        set(NAME "${project}__${version}")
     endif()
     add_executable(${NAME} ${SOURCE})
     target_link_libraries(${NAME} ${LIBS})
@@ -124,24 +124,24 @@ function(create_project_from_sources chapter demo)
         target_link_options(${NAME} PUBLIC /ignore:4099)
     endif(MSVC)
     if(WIN32)
-        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${chapter}")
-        set_target_properties(${NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${chapter}/Debug")
+        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${project}")
+        set_target_properties(${NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${project}/Debug")
     elseif(UNIX AND NOT APPLE)
-        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${chapter}")
+        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${project}")
     elseif(APPLE)
-        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${chapter}")
-        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/${chapter}")
-        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/${chapter}")
+        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${project}")
+        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/${project}")
+        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/${project}")
     endif(WIN32)
     # copy shader files to build directory
     file(GLOB SHADERS
-            "src/${chapter}/${demo}/*.vs"
-            # "src/${chapter}/${demo}/*.frag"
-            "src/${chapter}/${demo}/*.fs"
-            "src/${chapter}/${demo}/*.tcs"
-            "src/${chapter}/${demo}/*.tes"
-            "src/${chapter}/${demo}/*.gs"
-            "src/${chapter}/${demo}/*.cs"
+            "src/${project}/${version}/*.vs"
+            # "src/${project}/${version}/*.frag"
+            "src/${project}/${version}/*.fs"
+            "src/${project}/${version}/*.tcs"
+            "src/${project}/${version}/*.tes"
+            "src/${project}/${version}/*.gs"
+            "src/${project}/${version}/*.cs"
             )
     # copy dlls
     file(GLOB DLLS "dlls/*.dll")
@@ -151,11 +151,11 @@ function(create_project_from_sources chapter demo)
             add_custom_command(TARGET ${NAME} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SHADER} $<TARGET_FILE_DIR:${NAME}>)
             add_custom_command(TARGET ${NAME} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${DLLS} $<TARGET_FILE_DIR:${NAME}>)
         elseif(UNIX AND NOT APPLE)
-            file(COPY ${SHADER} DESTINATION ${CMAKE_SOURCE_DIR}/bin/${chapter})
+            file(COPY ${SHADER} DESTINATION ${CMAKE_SOURCE_DIR}/bin/${project})
         elseif(APPLE)
             # create symbolic link for *.vs *.fs *.gs
             get_filename_component(SHADERNAME ${SHADER} NAME)
-            makeLink(${SHADER} ${CMAKE_SOURCE_DIR}/bin/${chapter}/${SHADERNAME} ${NAME})
+            makeLink(${SHADER} ${CMAKE_SOURCE_DIR}/bin/${project}/${SHADERNAME} ${NAME})
         endif(WIN32)
     endforeach(SHADER)
     # if compiling for visual studio, also use configure file for each project (specifically to set up working directory)
@@ -170,11 +170,11 @@ function(create_project_from_sources chapter demo)
 endfunction()
 
 # then create a project file per tutorial
-foreach(CHAPTER ${CHAPTERS})
-    foreach(DEMO ${${CHAPTER}})
-        create_project_from_sources(${CHAPTER} ${DEMO})
-    endforeach(DEMO)
-endforeach(CHAPTER)
+foreach(project ${PROJECTS})
+    foreach(version ${${project}})
+        create_project_from_sources(${project} ${version})
+    endforeach(version)
+endforeach(project)
 
 
 include_directories(${CMAKE_SOURCE_DIR}/includes)
