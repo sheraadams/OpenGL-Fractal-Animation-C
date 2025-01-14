@@ -22,6 +22,12 @@ This is a 3D animation that I programmed in C++ with OpenGL. It uses glad, irKla
   <p><strong>For more info, check out my <a href="https://github.com/sheraadams/OpenGL-Fractal-Animation/edit/main/references.md" target="_blank">references</a>.</strong></p>
 </div>
 
-<div style="text-align: center;">
-  <p><strong>Proudly crafted with ❤️ by <a href="https://github.com/sheraadams" target="_blank">Shera Adams</a>.</strong></p>
-</div>
+## License:
+
+The code is based on various tutorial code from LearnOpenGL.com.
+
+Tutorial code is © Joey DeVries and licensed under the CC BY 4.0 License.
+
+Modifications and additional contributions are © Shera Adams and licensed under the Apache 2.0 License.
+
+Proudly crafted with ❤️ by Shera Adams.
